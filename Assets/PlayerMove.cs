@@ -27,12 +27,38 @@ public class PlayerMove : MonoBehaviour
 
     private void Start()
     {
-        
+        _move.action.started += StartMove;
+        _move.action.canceled += StopMove;
     }
 
     private void OnDestroy()
     {
-        
+        _move.action.started -= StartMove;
+        _move.action.canceled -= StopMove;
     }
 
+    private void StartMove(InputAction.CallbackContext context)
+    {
+        OnStartMove?.Invoke();
+        StartCoroutine(MoveCoroutine(context.ReadValue<Vector2>()));
+    }
+    private void StopMove(InputAction.CallbackContext context)
+    {
+        OnStartMove?.Invoke();
+        StopCoroutine(MoveCoroutine(context.ReadValue<Vector2>()));
+    }
+
+    IEnumerator MoveCoroutine(Vector2 dir)
+    {
+        //while(true)
+        //{
+        //    Vector3 tempDir = new Vector3(dir.x, 0f, dir.y);
+
+        //    transform.position += tempDir * Time.deltaTime * _speed;
+
+        //    yield return null;
+        //}
+
+        yield return null;
+    }
 }
