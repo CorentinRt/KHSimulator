@@ -14,6 +14,7 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] InputActionReference _move;
     [SerializeField] float _speed;
+    private Vector2 _moveDirection;
 
     // Event pour les dev
     public event Action OnStartMove;
@@ -47,6 +48,13 @@ public class PlayerMove : MonoBehaviour
     }
     private void UpdateMove(InputAction.CallbackContext context)
     {
+        if(_moveDirection != context.ReadValue<Vector2>())
+        {
+            Debug.Log("performed change");
+            _moveDirection = context.ReadValue<Vector2>();
+        }
+        Debug.Log("performed");
+
         //MovementRoutine = StartCoroutine(MoveCoroutine(context.ReadValue<Vector2>()));
     }
     private void StopMove(InputAction.CallbackContext context)
@@ -59,7 +67,7 @@ public class PlayerMove : MonoBehaviour
     {
         while(true)
         {
-            Debug.Log("coroutine");
+            dir = _moveDirection;
             Vector3 tempDir = new Vector3(dir.x, 0f, dir.y);
 
             transform.position += tempDir * Time.deltaTime * _speed;
