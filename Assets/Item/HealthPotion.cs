@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HealthPotion : Item
 {
+    [SerializeField] private int _healthValue;
+
     public HealthPotion(ItemType itemType) : base(itemType)
     {
         CurrentType = itemType;
@@ -11,7 +13,11 @@ public class HealthPotion : Item
 
     public override void GetItem()
     {
-        throw new System.NotImplementedException();
+        DestroyItem();
+    }
+    public override void DestroyItem()
+    {
+        Destroy(gameObject);
     }
 
     // Start is called before the first frame update
@@ -24,5 +30,16 @@ public class HealthPotion : Item
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other != null)
+        {
+            if (other.transform.parent.GetComponentInChildren<PlayerMove>() != null && other.transform.GetComponent<HitEntity>() == null)
+            {
+                other.transform.parent.GetComponentInChildren<EntityHealth>().IncreaseHealth(_healthValue);
+            }
+        }
     }
 }

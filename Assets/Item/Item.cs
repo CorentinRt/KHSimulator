@@ -8,7 +8,7 @@ public abstract class Item : MonoBehaviour
 {
     public Item(ItemType itemType)
     {
-        CurrentType = itemType;
+        
     }
     public enum ItemType
     {
@@ -21,17 +21,15 @@ public abstract class Item : MonoBehaviour
 
     private ItemType _currentType;
 
-    [SerializeField] private UnityEvent _onGetItem;
 
     // Properties
     public ItemType CurrentType { get => _currentType; set => _currentType = value; }
-    public UnityEvent OnGetItem { get => _onGetItem; set => _onGetItem = value; }
 
 
 
     // Methods
     public abstract void GetItem();
-
+    public abstract void DestroyItem();
 
     // Start is called before the first frame update
     void Start()

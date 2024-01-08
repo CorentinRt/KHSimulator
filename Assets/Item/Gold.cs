@@ -11,7 +11,11 @@ public class Gold : Item
 
     public override void GetItem()
     {
-        throw new System.NotImplementedException();
+        DestroyItem();
+    }
+    public override void DestroyItem()
+    {
+        Destroy(gameObject);
     }
 
     // Start is called before the first frame update
