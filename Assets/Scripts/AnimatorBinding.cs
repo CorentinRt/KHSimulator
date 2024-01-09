@@ -24,9 +24,19 @@ public class AnimatorBinding : MonoBehaviour
         _animator.SetBool("Walking", false);
     }
 
-    void StartPlayerAttack()
+    void StartPlayerAttackAnimation()
     {
         _animator.SetTrigger("Attack");
+    }
+
+    void StartDeathAnimation()
+    {
+        _animator.SetTrigger("Die");
+    }
+
+    void StartGetHitAnimation()
+    {
+        _animator.SetTrigger("GetHit");
     }
 
 
@@ -36,9 +46,22 @@ public class AnimatorBinding : MonoBehaviour
         _playerMove.OnStartMove += StartPlayerMoveAnimation;
         _playerMove.OnStopMove += StopPlayerMoveAnimation;
 
-        _playerAttack.OnStartAttack += StartPlayerAttack;
+        _playerAttack.OnStartAttack += StartPlayerAttackAnimation;
+
+        _entityHealth.OnDie += StartDeathAnimation;
+        _entityHealth.OnHealthDecrease += StartGetHitAnimation;
     }
 
+    private void OnDestroy()
+    {
+        _playerMove.OnStartMove -= StartPlayerMoveAnimation;
+        _playerMove.OnStopMove -= StopPlayerMoveAnimation;
+
+        _playerAttack.OnStartAttack -= StartPlayerAttackAnimation;
+
+        _entityHealth.OnDie -= StartDeathAnimation;
+        _entityHealth.OnHealthDecrease -= StartGetHitAnimation;
+    }
     // Update is called once per frame
     void Update()
     {

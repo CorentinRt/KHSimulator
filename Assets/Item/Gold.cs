@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class Gold : Item
 {
-    public Gold(ItemType itemType) : base(itemType)
-    {
-        CurrentType = itemType;
-    }
-
     public override void GetItem()
     {
         DestroyItem();
@@ -28,5 +23,17 @@ public class Gold : Item
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other != null)
+        {
+            if(other.transform.parent.GetComponentInChildren<PlayerMove>() != null && other.transform.GetComponent<HitEntity>() == null)
+            {
+                other.transform.parent.GetComponent<EntityGold>().IncreaseGold(ItemValue);
+                GetItem();
+            }
+        }
     }
 }

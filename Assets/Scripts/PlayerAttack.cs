@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using System;
-using System.Collections;
 
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] InputActionReference _attack;
+
+    Coroutine _attackCooldown;
 
     public event Action OnStartAttack;
 
@@ -29,13 +30,29 @@ public class PlayerAttack : MonoBehaviour
 
     void StartAttack(InputAction.CallbackContext context)
     {
-        OnStartAttack?.Invoke();
-        _attackRange.gameObject.SetActive(true);
+        if(!_attackRange.enabled)
+        {
+            OnStartAttack?.Invoke();
+            _attackRange.enabled = true;
+
+            _attackCooldown = StartCoroutine(AttackCooldown());
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        _attackRange.enabled = false;
+
+        _attackCooldown = null;
+
+        yield return null;
     }
 }

@@ -6,10 +6,6 @@ using UnityEngine.Events;
 
 public abstract class Item : MonoBehaviour
 {
-    public Item(ItemType itemType)
-    {
-        
-    }
     public enum ItemType
     {
         HealthPotion,
@@ -19,11 +15,13 @@ public abstract class Item : MonoBehaviour
 
     // Fields
 
-    private ItemType _currentType;
+    [SerializeField] private ItemType _currentType;
 
+    [SerializeField] int _itemValue;
 
     // Properties
     public ItemType CurrentType { get => _currentType; set => _currentType = value; }
+    public int ItemValue { get => _itemValue; set => _itemValue = value; }
 
 
 

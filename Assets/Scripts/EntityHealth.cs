@@ -7,38 +7,93 @@ using UnityEngine.Events;
 
 public class EntityHealth : MonoBehaviour
 {
-
     [SerializeField] int _maxHealth;
     public event Action<int> OnHealthUpdate;
+    public event Action OnHealthDecrease;
+    public event Action OnHealthIncrease;
+
+    public event Action<int> OnMaxHealthUpdate;
+    public event Action OnMaxHealthIncrease;
+
+    [SerializeField] float _deathCooldown;
+    public event Action OnDie;
+
+    [SerializeField] float _invincibilityCooldown;
+    private Coroutine _invincibilityCoroutine;
+    private bool _isInvincible;
     public int CurrentHealth { get; private set; }
     public int MaxHealth { get => _maxHealth; set => _maxHealth = value; }
 
+
+
+    public void DecreaseHealth(int value)
+    {
+        if (!_isInvincible)
+        {
+            CurrentHealth -= value;
+            CurrentHealth = Mathf.Clamp(CurrentHealth, 0, _maxHealth);
+            OnHealthUpdate?.Invoke(CurrentHealth);
+            if(CurrentHealth <= 0)
+            {
+                Die();
+            }
+            else
+            {
+                GetInvincibility();
+                OnHealthDecrease?.Invoke();
+            }
+        }
+    }
+    public void IncreaseHealth(int value)
+    {
+        CurrentHealth += value;
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, _maxHealth);
+        OnHealthUpdate?.Invoke(CurrentHealth);
+
+        OnHealthIncrease?.Invoke();
+    }
+    public void IncreaseMaxHealth(int value)
+    {
+        _maxHealth += value;
+        CurrentHealth += value;
+        OnMaxHealthUpdate?.Invoke(CurrentHealth);
+        OnMaxHealthIncrease?.Invoke();
+    }
+    private void GetInvincibility()
+    {
+        _isInvincible = true;
+        _invincibilityCoroutine = StartCoroutine(InvincibilityCooldown());
+    }
+    private void Die()
+    {
+        StartCoroutine(DeathCooldown());
+        OnDie?.Invoke();
+
+    }
+    private void Awake()
+    {
+        CurrentHealth = _maxHealth;
+    }
     private void Start()
     {
 
     }
 
-    // Methods
-
-    public void DecreaseHealth(int value)
+    IEnumerator DeathCooldown()
     {
-        CurrentHealth -= value;
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, _maxHealth);
-        OnHealthUpdate?.Invoke(CurrentHealth);
+        yield return new WaitForSeconds(_deathCooldown);
+
+        Destroy(gameObject);
+
+        yield return null;
     }
-    public void IncreaseHealth(int value)
+    IEnumerator InvincibilityCooldown()
     {
-        CurrentHealth += value;
-        Debug.Log("increase");
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, _maxHealth);
-        OnHealthUpdate?.Invoke(CurrentHealth);
+        yield return new WaitForSeconds(_invincibilityCooldown);
+
+        _isInvincible = false;
+        _invincibilityCoroutine = null;
+
+        yield return null;
     }
-
-    private void Awake()
-    {
-        CurrentHealth = _maxHealth;
-    }
-
-
-
 }

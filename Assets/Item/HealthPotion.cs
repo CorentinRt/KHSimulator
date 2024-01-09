@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class HealthPotion : Item
 {
-    [SerializeField] private int _healthValue;
-
-    public HealthPotion(ItemType itemType) : base(itemType)
-    {
-        CurrentType = itemType;
-    }
-
     public override void GetItem()
     {
         DestroyItem();
@@ -38,7 +31,8 @@ public class HealthPotion : Item
         {
             if (other.transform.parent.GetComponentInChildren<PlayerMove>() != null && other.transform.GetComponent<HitEntity>() == null)
             {
-                other.transform.parent.GetComponentInChildren<EntityHealth>().IncreaseHealth(_healthValue);
+                other.transform.parent.GetComponent<EntityHealth>().IncreaseHealth(ItemValue);
+                GetItem();
             }
         }
     }
