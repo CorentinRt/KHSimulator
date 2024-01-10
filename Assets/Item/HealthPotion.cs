@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class HealthPotion : Item
 {
-    public override void GetItem()
+    public override void GetItem(GameObject target)
     {
+        target.transform.parent.GetComponent<EntityHealth>().IncreaseHealth(ItemValue);
+        
         DestroyItem();
     }
     public override void DestroyItem()
@@ -23,17 +25,5 @@ public class HealthPotion : Item
     void Update()
     {
         
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other != null)
-        {
-            if (other.transform.parent.GetComponentInChildren<PlayerMove>() != null && other.transform.GetComponent<HitEntity>() == null)
-            {
-                other.transform.parent.GetComponent<EntityHealth>().IncreaseHealth(ItemValue);
-                GetItem();
-            }
-        }
     }
 }

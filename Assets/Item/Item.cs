@@ -26,7 +26,7 @@ public abstract class Item : MonoBehaviour
 
 
     // Methods
-    public abstract void GetItem();
+    public abstract void GetItem(GameObject target);
     public abstract void DestroyItem();
 
     // Start is called before the first frame update
@@ -39,5 +39,16 @@ public abstract class Item : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other != null)
+        {
+            if (other.transform.parent.GetComponentInChildren<PlayerMove>() != null && other.transform.GetComponent<HitEntity>() == null)
+            {
+                GetItem(other.gameObject);
+            }
+        }
     }
 }

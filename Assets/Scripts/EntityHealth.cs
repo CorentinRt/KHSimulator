@@ -21,6 +21,11 @@ public class EntityHealth : MonoBehaviour
     [SerializeField] float _invincibilityCooldown;
     private Coroutine _invincibilityCoroutine;
     private bool _isInvincible;
+
+    [SerializeField] private UnityEvent _onHealEffects;
+    [SerializeField] private UnityEvent _onLevelUpEffects;
+
+    public bool IsDead { get; private set; }
     public int CurrentHealth { get; private set; }
     public int MaxHealth { get => _maxHealth; set => _maxHealth = value; }
 
@@ -46,6 +51,7 @@ public class EntityHealth : MonoBehaviour
     }
     public void IncreaseHealth(int value)
     {
+        _onHealEffects?.Invoke();
         CurrentHealth += value;
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, _maxHealth);
         OnHealthUpdate?.Invoke(CurrentHealth);
@@ -54,6 +60,7 @@ public class EntityHealth : MonoBehaviour
     }
     public void IncreaseMaxHealth(int value)
     {
+        _onLevelUpEffects?.Invoke();
         _maxHealth += value;
         CurrentHealth += value;
         OnMaxHealthUpdate?.Invoke(CurrentHealth);
@@ -66,6 +73,7 @@ public class EntityHealth : MonoBehaviour
     }
     private void Die()
     {
+        IsDead = true;
         StartCoroutine(DeathCooldown());
         OnDie?.Invoke();
 

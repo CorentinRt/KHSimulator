@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EntityGold : MonoBehaviour
 {
     [SerializeField] private int _startGoldAmount;
+
+    [SerializeField] private UnityEvent _onIncreaseGoldEffects;
 
     public event Action<int> OnGoldUpdate;
     public int CurrentGold { get; private set; }
@@ -13,6 +16,7 @@ public class EntityGold : MonoBehaviour
 
     public void IncreaseGold(int value)
     {
+        _onIncreaseGoldEffects?.Invoke();
         CurrentGold += value;
         OnGoldUpdate?.Invoke(CurrentGold);
     }
